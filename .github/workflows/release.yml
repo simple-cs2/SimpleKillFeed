@@ -1,3 +1,4 @@
+# .github/workflows/release.yml
 name: Build and Release SKF
 
 permissions:
@@ -21,14 +22,16 @@ jobs:
         with:
           dotnet-version: '8.0.x'
 
+      - name: Restore dependencies
+        run: dotnet restore SimpleKillFeed.csproj
+
       - name: Build project
-        run: dotnet build SimpleKillFeed.csproj --configuration Release
+        run: dotnet build SimpleKillFeed.csproj --configuration Release --no-restore
 
       - name: Prepare release folder
         shell: powershell
         run: |
           New-Item -ItemType Directory -Force -Path release\SimpleKillFeed
-
           Copy-Item "bin\Release\net8.0\SimpleKillFeed.dll" "release\SimpleKillFeed\"
           Copy-Item "bin\Release\net8.0\MySqlConnector.dll" "release\SimpleKillFeed\"
           Copy-Item "bin\Release\net8.0\Dapper.dll" "release\SimpleKillFeed\"
